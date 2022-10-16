@@ -1,0 +1,30 @@
+name: auto_detection
+description: A new Flutter project.
+
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.18.2 <3.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  get:
+  dio:
+  shared_preferences:
+  flutter_verification_box: ^2.0.0
+  fluttertoast: ^8.1.1
+  dio_cookie_manager:
+  cookie_jar:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - image/lisen_tran.png
+
