@@ -5,11 +5,10 @@ import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 
-import 'dio_cache_interceptors.dart';
-import 'dio_interceptors.dart';
-import 'dio_method.dart';
-import 'dio_token_interceptors.dart';
-import 'dio_transformer.dart';
+import 'DioCacheInterceptors.dart';
+import 'DioInterceptors.dart';
+import 'DioTokenInterceptors.dart';
+import 'DioTransformer.dart';
 
 class DioUtil {
 
@@ -67,7 +66,7 @@ class DioUtil {
     _dio.interceptors.add(CookieManager(cookieJar));
 
     /// 刷新token拦截器(lock/unlock)
-    //_dio.interceptors.add(DioTokenInterceptors());
+    _dio.interceptors.add(DioTokenInterceptors());
 
     /// 添加缓存拦截器
     _dio.interceptors.add(DioCacheInterceptors());
@@ -113,7 +112,7 @@ class DioUtil {
   }
 
   /// 请求类
-  Future<T> request<T>(String path, {
+  Future<T> get<T>(String path, {
     DioMethod method = DioMethod.get,
     Map<String, dynamic>? params,
     data,
@@ -149,8 +148,40 @@ class DioUtil {
     }
   }
 
+  /// 请求类
+  Future<T> post<T>(String path, {
+    required Map<String,dynamic> params,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    Options options = Options(method: "post");
+    try {
+      Response response;
+      response = await _dio.post(path,
+          data: params,
+          cancelToken: _cancelToken,
+          options: options,
+          onSendProgress: onSendProgress,
+          onReceiveProgress: onReceiveProgress
+      );
+      return response.data;
+    } on DioError catch (e) {
+      throw e;
+    }
+  }
+
+
+
   /// 取消网络请求
   void cancelRequests({CancelToken? token}) {
      token ?? _cancelToken.cancel("cancelled");
   }
+}
+enum DioMethod {
+  get,
+  post,
+  put,
+  delete,
+  patch,
+  head,
 }

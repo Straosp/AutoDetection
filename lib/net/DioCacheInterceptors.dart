@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'dio_util.dart';
+import 'DioUtil.dart';
 
 class CacheObject {
   CacheObject(this.response)

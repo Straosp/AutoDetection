@@ -1,43 +1,43 @@
-import 'package:dio/dio.dart';
+import 'dart:convert';
 
-import 'dio_response.dart';
+import 'package:auto_detection/net/ApiErrorMessage.dart';
+import 'package:auto_detection/net/NetConstant.dart';
+import 'package:auto_detection/net/Result.dart';
+import 'package:dio/dio.dart';
 
 class DioInterceptors extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-
-    // 对非open的接口的请求参数全部增加userId
-    if (!options.path.contains("open")) {
-      options.queryParameters["userId"] = "xxx";
-    }
-
-    // 头部添加token
-    options.headers["token"] = "xxx";
-
-    // 更多业务需求
-
     handler.next(options);
-
     // super.onRequest(options, handler);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) async {
-
     // 请求成功是对数据做基本处理
+    var path = response.requestOptions.path;
+    print("path =  $path   data = ${response.data}");
     if (response.statusCode == 200) {
-      response.data = DioResponse(code: 0, message: "请求成功啦", data: response.data);
-    } else {
-      response.data = DioResponse(code: 1, message: "请求失败啦", data: response.data);
+      Map<String,dynamic> map = jsonDecode(response.data);
+      var result = Result.fromMap(map);
+      if (result.code == NetConstant.responseSuccessCode){
+        var apiError = ApiErrorMessage().getApiErrorCode(NetConstant.notDataCode, path, result.message);
+        if (result.data == null){
+          response.data = Result(message: result.message, code: NetConstant.responseNoDataCode, result: path,data: apiError);
+        }else{
+          response.data = Result(message: result.message, code: result.code, result: path,data: result.data);
+        }
+      } else if (result.code == NetConstant.tokenFailedCode) {
+        var apiError = ApiErrorMessage().getApiErrorCode(NetConstant.tokenFailedAttachCode, path, result.message);
+        response.data = Result(message: result.message, code: NetConstant.tokenFailedCode, result: path,data: apiError);
+      } else {
+        var apiError = ApiErrorMessage().getApiErrorCode(NetConstant.otherErrorAttachCode, path, result.message);
+        response.data = Result(message: result.message, code: NetConstant.responseErrorCode, result: path,data: apiError);
+      }
+    }else {
+      var apiError = ApiErrorMessage().getApiErrorCode(NetConstant.networkErrorCode, path, null);
+      response.data = Result(message: apiError.message, code: apiError.code, result: path,data: apiError);
     }
-
-    // 对某些单独的url返回数据做特殊处理
-    if (response.requestOptions.baseUrl.contains("???????")) {
-      //....
-    }
-
-    // 根据公司的业务需求进行定制化处理
-
     // 重点
     handler.next(response);
   }

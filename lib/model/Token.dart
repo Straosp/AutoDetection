@@ -1,9 +1,9 @@
-class Login {
+class Token {
 
-  Login({required this.token,});
+  Token({required this.token,});
   String token = "";
 
-  Login.fromJson(dynamic json) {
+  Token.fromJson(dynamic json) {
     token = json['token'];
   }
 

@@ -17,6 +17,22 @@ dependencies:
   fluttertoast: ^8.1.1
   dio_cookie_manager:
   cookie_jar:
+  flustars:
+  synchronized:
+  date_format:
+  flutter_svg:
+  cached_network_image:
+  charcode:
+  flutter_swiper: ^1.1.6
+  flutter_bloc: ^8.1.1
+  hive:
+  hive_flutter:
+  build_runner:
+  path_provider:
+  hive_generator:
+  audioplayers:
+  flutter_webview_plugin:
+  url_launcher: ^6.1.6
 
 dev_dependencies:
   flutter_test:
@@ -27,4 +43,6 @@ flutter:
   uses-material-design: true
   assets:
     - image/lisen_tran.png
+    - image/lisen_lancher.png
+    - image/connect.svg
 

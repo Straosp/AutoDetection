@@ -7,5 +7,12 @@ class Constant{
     return exp.hasMatch(input);
   }
 
+  static String DETECTION_POINT_KEY = "detection_point";
+  static String AUDIO_DETAIL_FILE_ID_KEY = "audio_file_id";
+
+
+
 }
 const String IS_FIRST_APP = "is_first_app";
+const String LOGIN_PHONE = "login_phone";
+const String USER_TOKEN = "user_token";
